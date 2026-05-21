@@ -1,7 +1,19 @@
 POST http://localhost:8080/api/v1/auth/register
 Content-Type: application/json
+X-Client-Id: xxx
 
 {
-  "email" : "daitran.inbox@gmail.com",
-  "password": "Admin@123"
+  "email" : "email@example.com",
+  "password": "secretpassword",
+  "confirmPassword": "secretpassword"
+}
+
+###
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+X-Client-Id: xxx
+
+{
+"email" : "email@example.com",
+"password": "secretpassword"
 }
