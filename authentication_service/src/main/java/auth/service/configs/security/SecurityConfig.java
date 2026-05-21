@@ -1,5 +1,6 @@
 package auth.service.configs.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
 
     @Bean
@@ -28,7 +30,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(
-                            "/",
+                            "/", // cho phep truy cap trang chu => localhost:8080
                             "/api/v1/auth/**",
                             "/swagger-ui/**",
                             "/swagger/**",
@@ -56,7 +58,10 @@ public class SecurityConfig implements WebMvcConfigurer {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://localhost:9090" // cho phep service "service_mvc" truy cap
+        ));
 
         // Cho phép các method
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

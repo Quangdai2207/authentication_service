@@ -1,4 +1,7 @@
+Tieng Viet
 HUONG DAN SU DUNG AUTH SERVICE
+
+(*) Hien tai Authentication Service dang con update va chinh sua them
 
 I. GIOI THIEU AUTH SERVICE
     Auth service la mot service hoat dong doc lap chu yeu tap trung vao nghiep vu xac thuc va phan quyen nguoi dung va phien truy
@@ -34,6 +37,12 @@ I. GIOI THIEU AUTH SERVICE
     Authentication Service ngoai viec xac thuc danh tinh, quyen truy cap nguoi dung con co the quan ly phien truy cap nguoi dung thay
     cho cac ung dung. Cac ung dung chi can tap trung xu ly Logic Business cua ung dung
 
+     Doi voi cac ung dung la microservices vva ung dung phan tach FE/BE co the su dung Authentication service de xac thuc bang cach FE gui
+     body kem auth-service-Id (ClientId) trong moi request header
+
+     Doi voi cac ung dung la monolithic co the xu ly gui request tu BE bang RestTemplate theo endpoints ma Authentication Service dinh
+     nghia va public.
+
 III. CACH SU DUNG AUTHENTICATION SERVICE
     Hien tai Authentication Service dang ap dung cho services su dung FE server, MVC dang duoc trien khai.
 
@@ -47,11 +56,20 @@ III. CACH SU DUNG AUTHENTICATION SERVICE
                             Token se duoc Authentication Service response ve cho FE Service da dang ky
 
                 + Redirect URL
-                            Sau khi dang ky URL cho redirect URL, Authentication Service tu dong dieu huong ve URL ma
-                            service MVC da dang ky co kem theo token nguoi dung.
+                           Day la URL ap dung cho service MVC voi template engine khi xac thuc bang google. apple,x
+                           URL duoc Authentication service dieu huong den trang dang nhap google va bat dau dang nhap bang
+                           email google.
 
-                            Service MVC co trach nhiem dinh nghia endpoint trong controller dung voi endpoint da dang ky
-                            voi Authentication service de dieu huong.
+                           khi thuc hien thanh cong thi Authentication Service tu dong dieu huong ve URL ma BE dinh nghia trong
+                           cau hinh bao gom token Authentication Service tra ve
+
+                           VD: BE cau hinh URL redirect
+                               response.sendRedirect("http://locahost:9999/auth/google/success?token= " + auth-service-token);
+
+                               @GetMapping("/auth/google/success")
+                               public void authWithGoogle(@RequestParam("token") String token) {
+                                    System.out.println(token);
+                               }
 
        B2: Sau khi dang ky xong, Authentication Service cap cho cac service cac noi dung sau:
                 + Auth-service-id

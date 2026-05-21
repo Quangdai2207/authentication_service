@@ -1,0 +1,16 @@
+Service "Service_mvc" la service duoc thiet ke theo kieu Monolithic, day la service dunng de test luong du lieu khi su
+dung dich Authentication Service xac thuc danh tinh nguoi dung
+
+Luong thuc thi Service_mvc
+Gia su rang Service_mvc su dung dich vu xac thuc danh tinh nguoi dung tu Authentication Service va duoc cap authServiceId sau khi
+dang ky su dung dich nhu da huong dan trong file huong-dan-su-dung.txt trong service authentication service.
+
+Khi nguoi dung thuc hien xac thuc local va tuong tac tren template engine Thymleaf Spring, BE nhan du lieu khi nguoi dung submit va
+toan bo du lieu nay duoc BE gui truc tiep den service Authentication Service dong thoi BE phai gui kem theo authServiceId trong request
+bang RestTemplate.
+
+Khi nguoi dung click vao nut bam "Login with Google", thay vi "service_mvc" dieu huong nguoi dung ve UI dang nhap mac dinh cua google
+thi service_mvc dieu huong ve URL do Authentication service cung cap, URL nay se tu dong render UI cua Authentication Service thiet ke.
+
+Dung tai UI dang nhap bang google cho Authentication Servie thiet ke, luc nay nguoi dung dang nhap tai khoan dang nhap email cua nguoi dung
+va Authentication Service lay email cung voi gooogle Client ID ma Authentication Service da dang ky dich vu OAuth

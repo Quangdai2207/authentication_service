@@ -1,0 +1,11 @@
+Service "reaction" la service duoc su dung de dinh nghia cac toi tuong, giup thuan tien cho viec cac ung dung/ service khac de dang
+tuong tac voi voi nhau thong qua RestTemplate.
+
+Thay vi moi service phai tu dinh nghia cac doi tuong va tao ra nhieu lop doi tuong khong can thiet trong qua trinh giao tiep truyen/ nhan
+du lieu, cac service co the su dung chung mot doi tuong duy nhat tu "reaction" de co the gui/nhan du lieu de dang hon.
+
+Cac doi tuong duoc cung cap tu Reaction co the huu ich cho cac service la ung dung MVC khi nhan du lieu tu template engine va gui den cho
+Authentication Service, o chieu nguoc lai Authentication Service cung co the su dung kieu du lieu tuong ung ma service MVC su dung tu Reaction
+de gui phan hoi nhanh chong.
+
+Cac service la microservices cung co the huu ich cho mot so truong hop.

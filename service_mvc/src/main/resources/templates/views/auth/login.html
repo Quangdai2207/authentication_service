@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+</head>
+<body>
+<div>
+    <h1>Login Page</h1>
+    <form th:action="@{/auth/login}" method="POST">
+        <label>Email</label><br/>
+        <input type="text" name="email"/>
+        <br/>
+        <label>Password</label><br/>
+        <input type="text" name="password"/>
+        <br/>
+        <button type="submit">Submit</button>
+    </form>
+    <br/>
+    <a style="border: 1px;
+    border-radius: 5px;
+    padding: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: blue"
+    th:href="@{/oauth2/authorization/google}"
+    >Login with google</a>
+</div>
+</body>
+</html>

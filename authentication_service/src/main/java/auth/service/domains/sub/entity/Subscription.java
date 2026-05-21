@@ -25,8 +25,11 @@ public class Subscription {
     @Column(nullable = false)
     private String appName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String origin;
+
+    @Column(nullable = true)
+    private String redirectUrl;
 
     @Column(nullable = false)
     private String clientId;

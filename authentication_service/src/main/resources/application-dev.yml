@@ -54,7 +54,7 @@ spring:
   # Cau hinh Redis -  Dung Redis cloud
   data:
     redis:
-      url: ${REDIS_URL}}
+      url: ${REDIS_URL}
 
 
 
