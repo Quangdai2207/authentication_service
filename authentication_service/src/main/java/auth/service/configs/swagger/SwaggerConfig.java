@@ -22,9 +22,6 @@ public class SwaggerConfig {
                         .title("Ecommerce Mini - API Document")
                         .description("Ecommerce Mini with Authentication Service")
                         .version("V1.0")
-                        .contact(new Contact()
-                                .extensions(Map.of("Supports: ", "0819099931", "Email: ", "daitran.inbox@gmail.com"))
-                        )
                 )
                 // Add security requirement for JWT
                 .addSecurityItem(new SecurityRequirement().addList("BearerAuth"))
