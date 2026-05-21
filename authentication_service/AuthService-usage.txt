@@ -1,14 +1,17 @@
 HUONG DAN SU DUNG AUTH SERVICE
 
-GIOI THIEU AUTH SERVICE
+I. GIOI THIEU AUTH SERVICE
     Auth service la mot service hoat dong doc lap chu yeu tap trung vao nghiep vu xac thuc va phan quyen nguoi dung va phien truy
     cap nguoi dung.
+
     Auth Service duoc build tren he sinh thai Spring Framework Java va tich hop xac thuc nguoi dung bang OAuth2 Client
     Jwt.
+
             1.  He sinh thai Spring Framework gom co
                     + Spring Boot       -> Core APIs
                     + Spring Security   -> Xac thuc
                     + Spring Actuator   -> Metrics System
+                    + Spring MVC        -> Cung cap UI dang ky su dung Auth Service xac thuc nguoi dung.
 
             2. OAuth Client
                     + Google
@@ -16,5 +19,58 @@ GIOI THIEU AUTH SERVICE
                     + Github
                     + X
 
-    Auth Service su dung kien truc Monolithic
+    Auth Service trien khai tren kien truc Monolithic
+    Auth Service tich hop mot so cac cong cu:
+        1. Redis    -> token store
+        2. Swagger  -> test API bang UI swagger
+
+ II. VAN DE AUTH SERVICE CO THE GIAI QUYET
+    Authentication Service la mot service xac thu tap trung, tich hop cac tinh nang xac thuc OAuth tu cac nha cung cap khac.
+
+    Cac ung dung khi co nhu cau xac thuc nguoi dung, thay vi phai cau hinh tung service Oauth va Local, thi Authentication Service
+    giai quyet van de do. ung dung chi can dang ky mot lan va Authentication Service tu dong dang ky va xac thuc nguoi dung ma khong
+    can phai tu cau hinh rieng le thu cong.
+
+    Authentication Service ngoai viec xac thuc danh tinh, quyen truy cap nguoi dung con co the quan ly phien truy cap nguoi dung thay
+    cho cac ung dung. Cac ung dung chi can tap trung xu ly Logic Business cua ung dung
+
+III. CACH SU DUNG AUTHENTICATION SERVICE
+    Hien tai Authentication Service dang ap dung cho services su dung FE server, MVC dang duoc trien khai.
+
+    De co the su dung dich vu Authentication Service, co the thuc hien cac buoc sau:
+        B1: Truy cap dia chi: http://localhost:port//auth-service/subscription
+
+            Cac noi tung yeu cau dang ky tren trang subscription
+                + Ten du an
+                + Origin URL
+                            Ap dung cho ung dung co su dung FE service nhu ReactJs, VueJs, Angular...vv
+                            Token se duoc Authentication Service response ve cho FE Service da dang ky
+
+                + Redirect URL
+                            Sau khi dang ky URL cho redirect URL, Authentication Service tu dong dieu huong ve URL ma
+                            service MVC da dang ky co kem theo token nguoi dung.
+
+                            Service MVC co trach nhiem dinh nghia endpoint trong controller dung voi endpoint da dang ky
+                            voi Authentication service de dieu huong.
+
+       B2: Sau khi dang ky xong, Authentication Service cap cho cac service cac noi dung sau:
+                + Auth-service-id
+                + Auth-service-key
+                    Giup cho cac services co the su dung de xac thuc chu ky, token va lay thong tin nguoi dung chu dong ma khong
+                    can phai yeu cau Authentication Service verify.
+
+                + Auth-service-token
+                    La token nguoi dung sau khi duoc Authentication Service xac thuc hoan tat
+
+       B3: Cac services tu luu cac noi dung sau khi Authentication Service cap cho
+           Luu y rang, Auth-service-key la khoa BE service khong nen cung cap ra ngoai cho FE.
+
+       B4: Khi Service xac thuc nguoi dung tu FE server, auth-service-id phai duoc kem theo trong header request
+
+
+
+
+
+
+
 
