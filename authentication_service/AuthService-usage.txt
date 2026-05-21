@@ -1,7 +1,8 @@
 HUONG DAN SU DUNG AUTH SERVICE
 
 GIOI THIEU AUTH SERVICE
-    Auth service la mot service hoat dong doc lap chu yeu tap trung vao nghiep vu xac thuc va phan quyen nguoi dung.
+    Auth service la mot service hoat dong doc lap chu yeu tap trung vao nghiep vu xac thuc va phan quyen nguoi dung va phien truy
+    cap nguoi dung.
     Auth Service duoc build tren he sinh thai Spring Framework Java va tich hop xac thuc nguoi dung bang OAuth2 Client
     Jwt.
             1.  He sinh thai Spring Framework gom co
