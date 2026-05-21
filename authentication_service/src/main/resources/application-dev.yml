@@ -54,7 +54,7 @@ spring:
   # Cau hinh Redis -  Dung Redis cloud
   data:
     redis:
-      url: redis://default:0aXq6EoWN67FQIC6BIJOPIwNEkdeuXuU@redis-16495.crce264.ap-east-1-1.ec2.cloud.redislabs.com:16495
+      url: ${REDIS_URL}}
 
 
 
