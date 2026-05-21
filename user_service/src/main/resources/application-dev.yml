@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: user_service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce_spring?useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
+    username: root
+    password:
+
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        default_batch_fetch_size: 10
+        format_sql: true
+
+# Cau hinh chi can nhap "http://localhost:8080/swagger" thay vi go day du URL http://localhost:8080/swagger-ui/index.html
+springdoc:
+  swagger-ui:
+    path: /swagger
+    disable-swagger-default-url: true

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscription</title>
+</head>
+<body>
+
+<div>
+    <h1>Dang ky dich vu Auth Service</h1>
+
+    <div>
+        <form th:action="@{/auth-service/subscription}" method="POST">
+
+            <div>
+                <label>Application name</label><br/>
+                <input
+                        type="text"
+                        name="appName"
+                        required
+                >
+            </div>
+
+            <div>
+                <label>Host Origin client: </label><br/>
+                <input
+                        type="text"
+                        name="domainName"
+                        required
+                >
+            </div>
+
+            <button type="submit">
+                Submit
+            </button>
+        </form>
+    </div>
+</div>
+<div th:if="${error}">
+    <p th:text="${error}"></p>
+</div>
+
+</body>
+</html>

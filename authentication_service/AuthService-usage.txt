@@ -1,0 +1,19 @@
+HUONG DAN SU DUNG AUTH SERVICE
+
+GIOI THIEU AUTH SERVICE
+    Auth service la mot service hoat dong doc lap chu yeu tap trung vao nghiep vu xac thuc va phan quyen nguoi dung.
+    Auth Service duoc build tren he sinh thai Spring Framework Java va tich hop xac thuc nguoi dung bang OAuth2 Client
+    Jwt.
+            1.  He sinh thai Spring Framework gom co
+                    + Spring Boot       -> Core APIs
+                    + Spring Security   -> Xac thuc
+                    + Spring Actuator   -> Metrics System
+
+            2. OAuth Client
+                    + Google
+                    + Apple
+                    + Github
+                    + X
+
+    Auth Service su dung kien truc Monolithic
+

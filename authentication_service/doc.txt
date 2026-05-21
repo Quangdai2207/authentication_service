@@ -1,0 +1,126 @@
+AUTHENTICATION SERVICE DOCUMENTATION
+
+Authentication Service la mot service doc lap thuc hien viec xac thux danh tinh nguoi dung dua theo co che hoat dong cua OAuth.
+Authentication service la mot service hoan thien dung de thuc xac thuc danh tinh nguoi noi bo cua toan he thong ung dung theo kien truc
+Microservices. Dieu nay giup cho cac service khac chi tap trung vao viec thuc hien logic business chinh cua service do va giam tai viec
+cau hinh xac thuc danh tinh nguoi dung mot cach thu cong.
+
+    Vi du:
+        Mot he thong ung dung voi kien truc Microservice nhu sau:
+                Application_microservice
+                                |_ Auth_service
+                                |_ User_service
+                                |_ Payment_service
+                                |_ Order_service
+                                |_ Others_scalable_service
+                                |
+                                |_ docker-compose.yml
+                                |_ .dockerignore
+                                |_ .env
+                                |_ .env.example
+
+    Microservice la mot kien truc phan mem dung de tach cac module cua ung dung va cac module nay co the mo rong va co the phat trien
+    mot cach doc lap va chuyen mon hoa trong qua trinh phat trien ung dung.
+
+    Moi mot module duoc tach roi va chuyen mon hoa duoc xem la mot service doc lap (co the go la mot he thong BE doc lap) co the phuc vu
+    cho ung dung hoac bat ky ung dung can su dung den cac tinh nang cua service do.
+
+    Nhu vay, trong cau truc to chuc ma nguon cua Application_microservice, moi mot service duoc xem la mot service co he thong BE hoat
+    dong doc lap va khong phu thuoc vao service nao. Cac service nay co the phuc phu cho toan bo he thong ung dung noi bo hoac cung co the
+    phuc vu cho bat ky ung dung nao can den cac tinh nang cua cac service do.
+
+    Vowi Auth_service la mot module/service doc lap chuyen xu ly cac van de xac thuc danh tinh nguoi dung khi truy cap vao ung dung. Cac service
+    con lai nhu User_service, Payment_service chi can tap trung vao logic business trong tam cua service do va co the giam tai duoc phan cau
+    xac thuc nguoi dung.
+
+    Cac Services co the giao tiep nhau thong qua Gateway API hoac Kafka eventbus driven... de Nhan/ Truyen du lieu can thiet trong ung dung theo
+    thoi gian thuc.
+
+CO CHE HOAT DONG CUA AUTHENTICATION SERVICE
+Authentication service hoat dong dua tren co che cua Oauth2 Client.
+
+    OAuth2 Client:
+         Luong thuc thi:
+                    Khi mot ung dung muon su dung dich vu xac thuc nguoi dung bang OAuth, ung dung phai can 2 thu de lam viec voi
+                    OAuth la Client_id va Client_Secret.
+
+                    Client_id dung de xac dinh ung dung da dang ky su dung dich vu OAuth hay la tu ung dung gia mao khac
+                    Client_secret la khoa bi mat de OAuth xac dinh server dang can yeu cau xac thuc nguoi dung tu server cua ung dung
+                    do gui ve cho OAuth
+
+                    khi ung dung dang ky su dung dich vu OAuth co the la ung dung Monolithic hoac co the la ung dung Microservice. Voi ung
+                    dung Monolithic MVC truyen thong Client_id se xac dinh duoc Origin da dang ky voi OAuth. Voi dung dung la Microservice
+                    thi Client_id can phai public cho FE giup OAuth xac dinh duoc Origin da dang ky.
+
+                    Nhu vay, Ung dung can phai dang ky su dung dich OAuth de nhan duoc Client_id va Client_secret. Quan trong nhat la trong
+                    OAuth Console co 2 truong quan trong la Authorized JavaScript origins va Authorized redirect URIs.
+
+                            + Authorized redirect URIs: dung cho ung dung Monolithic khi click vao nut bam "dang ky voi google" thi google
+                                                        tu dong chuyen huong ve UI form dang ky cua Google
+
+                            + Authorized JavaScript origins: Dung cho ung dung Microservice khi ung dung phat trien UI doc lap bang FE
+                                                             server. FE can phai co Client_id va URL cua FE can phai dang ky trong truong nay.
+                                                             Khi nguoi dung click vao nut "Dang ky voi google" thi google hien thi popup UI
+                                                             tu google va mot token_ID duoc gui ve cho FE. Luc nay FE can phai gui token_ID ve
+                                                             cho BE cua ung dung de xac thuc danh tinh nguoi dung.
+
+         Minh hoa truc quan cho ung dung Microservice voi
+
+                    ---------------             -------------           -----------
+                    |  Trinh duyet |    ->>>    |   OAuth   |   ->>>    |   App   |
+                    ---------------             -------------           -----------
+                        FE server (MS)              Google                  BE
+                        template Engine (MN)        Apple                   Service
+                                                    X
+                                                    Github
+
+                    Tu trinh duyet, khi click dang ky bang google/apple -> Oauth dieu huuong ve Form UI xa thuc tu OAuth
+                    Sau khi OAuth xac thuc thanh cong, Token_id tra ve cho FE service
+                    FE service gui token_id/token ve cho BE
+                    BE nhan token_id/token gui nguoc cho OAuth kiem tra va xac nhan
+                    Oauth tra ve ket qua cho BE, neu dung lay thong tin nguoi dung xu ly request, neu sai reject
+
+         Dieu kien quan trong de FE, BE va OAtuh Service co the noi chuyen voi nhau thong qua Client_ID, va Client_ID can phai public
+         giua FE va BE sau khi OAuth cap cho ung dung, va Client_secret BE khong can phai public cho FE.
+
+         Nhu vay, Client_ID duoc xem la mot ma public key duoc tao ra tu private Key dua tren thuat toan "RSA". No mot cach de hieu thi dich
+         OAuth khi nhan duoc thong tin dang ky dich vu tu ung dung, OAtuh se tao ra mot cap khoa Private Key va Public key tu thuat toan "RSA"
+         va Public Key la key ma OAtuth cap cho ung dung va ung dung can phai public key nay cho FE service cua ung dung do de co the giao tiep
+         giua 3 ben, dong thoi OAuth xac dinh duoc nguoi dung xac thuc tu Origin da dang ky hay tu mot ung dung gia mao khac.
+
+
+    Authentication Service:
+            Luong thuc thi:
+                Dua tren co che hoat dong cua OAuth, Authentication Service cung hoat dong tuong tu nhu vay va ban than Authentication
+                service cung tich hop xac thuc danh tinh bang dich vu OAuth.
+
+                Authentication service chi khac mot chut ve cach tra token cho FE service. Nghia la, khi nguoi dung xac thuc thanh cong
+                bang phuong thuc xac thuc LOCAL cua ung dung hoac bang dich vu OAuth tu Authentication Service, luc nay Authentication
+                service tao mot Jwt Token dua tren Private Key (SigningKey) tra ve cho FE, vva FE gui token nay ve cho BE Service cua no
+
+                Khi BE service nhan duoc token tu FE, BE dung Public Key de xac nhan chu ky tren token thay vi phai gui token ve cho Authentication
+                service xac nhan.
+
+                BE service muon nhan Public Key tu Authentication Service cung phai thuc cac buoc dang ky nhu Authentication Service dang ky voi OAuth
+                Dieu nay co nghia, Authentication Service co the tao mot UI don gian de nhan thong tin dang ky sau do tao cap khoa Private key va Public
+                key vva cung cap Public Key cho service dang ky su dung Authentication service. Public Key nay BE khong can phai public cho FE service.
+
+                Nhu vay, diem khac biet o day la Public Key ma Authentication Service cap cho service su dung no khong can phai public cho FE cua service do
+                va service do co the xac thuc token truc tiep tu phia BE ma khong can phai nho su can thiep Authentication Service.
+
+
+                    ---------------             -----------------------------           -----------
+                    |  Trinh duyet |    ->>>    |   Authentication service  |   ->>>    |  Server |
+                    ---------------             ----------------------------            -----------
+                    FE server (MS)                     Tich hop OAuth                       BE
+                    template Engine (MN)                                                    Service
+
+
+
+
+
+
+
+
+
+

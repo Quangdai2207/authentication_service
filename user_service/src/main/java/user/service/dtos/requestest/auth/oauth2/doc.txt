@@ -1,0 +1,49 @@
+Trong package DTO dto.requestest.oauth2, cac class dtos deu su dung annotation @JsonProperty("") giup cho viec chuyen
+doi ten field cua doi tuong java thanh ten field cua Json.
+
+Vi du:
+        Trong class DTO AppleRequest, ta co field token cua lop doi tuong AppleRequest nhu sau:
+
+        public class Google {
+            @JsonProperty("token_id")
+            private String token
+        }
+
+        Mac dinh neu nhu khong su dung @JsonProperty("token_id") thi Json tu dong dung filed mac dinh cua doi tuong java
+        la token:
+                {
+                    token: ""
+                }
+
+        Nhung neu muon chuyen doi ten field java thanh ten field json, @JsonProperty("token_id") se giai quyet viec do, va luc
+        nay field token -> token_id
+                {
+                    token_id: ""
+                }
+        FE khi fetch du lieu, chi can lay dung ten field Json tu BE tra ve .
+
+Mot annotation khac huu ich cho viec xu ly du lieu tu java -> json va nguoc lai la @JsonInclude(Enum).
+@JsonInclude(Enum) nham dam bao viec cac truong co the null hooc khong co du lieu co the duoc che giau di khi du lieu duoc
+truyen di.
+
+Vi du:
+        public class ProductResponse {
+               private Integer quantity;
+               private String name;
+               private String price;
+               private Integer rating;
+
+               @JsonProperty("orders")
+               @JsonInclude(JsonInclude.include.NON_NULL)
+               private List<Order> orders;
+        }
+
+        khi san pham chua co don dat hang order thi danh sach order co the rong hoc null, neu order co du lieu thi duoc
+        java binding va chuyen thanh du lieu json. Neu order khong co gi hoac null thi java tu dong skip truong order va du
+        lieu dui di khong bao gom truong order.
+
+
+
+/Users/admin/Desktop/APTECH/Daitran/java/spring_boot_projects/spring_microservices_mini/user_service/src/main/java/user/service/dtos/requestest/user/UserUpdateRequest.java:12
+java: builder() in user.service.dtos.requestest.user.UserUpdateRequest cannot hide builder() in user.service.dtos.requestest.user.UserCreateRequest
+  return type user.service.dtos.requestest.user.UserUpdateRequest.UserUpdateRequestBuilder is not compatible with user.service.dtos.requestest.user.UserCreateRequest.UserCreateRequestBuilder
