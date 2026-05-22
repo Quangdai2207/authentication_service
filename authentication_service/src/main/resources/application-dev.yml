@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    admin: authentication_service
+    name: authentication-service
 
   # Cau hinh Database
   datasource:
@@ -65,7 +65,11 @@ springdoc:
     disable-swagger-default-url: true
 
 
+## CAU HINH EUREKA CLIENT CHO SERVICE
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:1102/eureka
+      defaultZone: http://localhost:8761/eureka
+
+    register-with-eureka: true
+    fetch-registry: true

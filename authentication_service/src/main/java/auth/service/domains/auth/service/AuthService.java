@@ -51,7 +51,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AuthService {
+public class AuthService implements IAuthService {
     private final static int expire = 5;
 
     private final UserRepository userRepository;
@@ -67,6 +67,7 @@ public class AuthService {
     private final ValidateSubscription validateSubscription;
 
     @Transactional
+    @Override
     public ResponseEntity<ApiResponseV1<AuthResponseV1>> register(
             RegisterRequest body,
             HttpServletRequest request,
@@ -239,6 +240,7 @@ public class AuthService {
 
     ///  Xac thuc bang LOCAL ung dung
     @Transactional
+    @Override
     public ResponseEntity<ApiResponseV1<LoginResponse>> login(
             LoginRequest loginRequest,
             String clientId,
