@@ -1,0 +1,113 @@
+SERVICE REGISTRY
+
+I.  SERVICE REGISTRY LA GI?
+    + Service Registry la thuat ngu trong kien truc Microservice
+    + Service Registry la mot may chu trung tam dong vai tro la quan ly cac services khac trong kien truc Microservice (MS) bao gom Host
+      Port cua tung Instance (Mot mot services co the co 1 hoac nhieu instance giup can bang tai - load balancing). Giup cac services co the
+      tu tim va giao tiep nhau ma khong can phai hardcode ip code Call Apis
+
+II. LOI ICH CUA SERVICE REGISTRY
+    Nhu o phan gioi thieu, Service Registry la mot service dong vai tro la may chu trung tam quan ly cac services trong kien truc MS. No co the
+    giiup cho ung dung hoat dong tron tru nho co che Load Balancing (can bang tai), giup cac services tu tim kiem va giao tiep nhau, dong thoi co
+    the biet duoc suc khoe va tinh tinh hoat dong cua tung services thong qua cac so lieu tu Service Registry cung cap.
+
+        Vi du:
+            Trong ung dung Spring_microservice_mini co cac services chinh nhu:
+                1. authentication service:  Service xac thuc danh tinh nguoi dung
+                2. service mvc:             Service test tuong tac du lieu tu MVC voi authentication service
+                3. user service:            Service tap trung logic besiness nguoi dung
+                4. service registry:        Service dong vai tro may chu trung tam quan ly cac service khac.
+
+            Cac service auth, user, mvc lan luot dang ky vao trinh quan ly cua service registry, moi mot service khi dang ky voi service registry
+            he thong se duoc cau hinh cho moi service sau khi dang ky voi nhieu instance khi runtime, dieu nay giup cho ung dung co the hoat dong
+            tron tru va co kha nang chiu loi cao do co che can bang tai - Load Balancing
+
+III. CAU HINH VA CO CHE HOAT DONG
+     Hien tai co mot so cac cong nghe ho tro cho viec cau hinh may chu Service Registry nhu:
+    ____________________________________________________
+    | Công nghệ      | Mô tả                           |
+    | -------------- | ------------------------------- |
+    | Netflix Eureka | phổ biến nhất trong Spring      |
+    | Consul         | của HashiCorp                   |
+    | Zookeeper      | Apache                          |
+    | Kubernetes DNS | production hiện đại thường dùng |
+    ----------------------------------------------------
+
+    Trong ngu canh hien tai, Eureka dang duoc ap dung nhieu trong ung dung thuc te dang trien khai. De co the su dung dich vu Cloud Eureka
+    co the thuc hien cau hinh tu buoc nhu sau:
+
+    Voi service dong vai tro la may chu trung tam quan ly services can phai:
+        1. Them dependency Eureka server
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            </dependency>
+
+        2. Tai class main khoi dong ung dung, danh dau annotation la may chu service quan ly voi annotation
+
+           @SpringBootApplication
+           @EnableEurekaServer // danh dau la may chu trung tam
+           public class ExampleApplicationName {
+
+               public static void main(String[] args) {
+                   SpringApplication.run(RegistryApplication.class, args);
+               }
+           }
+
+        3. Trong file application.yml hoac application.properties, them cac cau hinh:
+           ## Cau hinh yml
+           spring:
+             application:
+                name: service_registry
+
+           server:
+             port: 8761 // Tuy chon port
+
+           eureka:
+             client:
+               register-with-eureka: false
+               fetch-registry: false
+
+           ## Cau hinh .properties
+           spring.application.name=service_registry
+           server.port=1102
+
+           # Cau hinh Eureka Cloud
+           eureka.client.register-with-eureka=false
+           eureka.client.fetch-registry=false
+
+    O chieu nguoc lai, cac service khac dong vai tro la client va phai tu dang ky voi trinh quan ly cua may chu phai tu dang ky service. Thuc hien
+    mot so buoc sau de dang ky:
+        1. Them dependency voi vai tro la client
+           <dependency>
+               <groupId>org.springframework.cloud</groupId>
+               <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+           </dependency>
+
+        2. Them cau hinh trong file yml hoac .properties
+           spring:
+             application:
+               name: name-service
+
+           server:
+             port: 8081
+
+           eureka:
+             client:
+               service-url:
+                 defaultZone: http://localhost:8761/eureka // URL trinh quan ly cua service may chu
+
+        3. Tai Class Main khoi dong ung dung them annotation danh dau la client
+           @SpringBootApplication
+           @EnableEurekaClient // danh dau la service client
+           public class ExampleApplicationName {
+
+               public static void main(String[] args) {
+                   SpringApplication.run(RegistryApplication.class, args);
+               }
+           }
+
+
+
+
+
