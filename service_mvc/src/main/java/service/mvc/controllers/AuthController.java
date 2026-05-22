@@ -49,11 +49,11 @@ public class AuthController {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<>(json, headers);
-            ResponseEntity<String> response = restTemplate
+            ResponseEntity<ServiceRequestLogin> response = restTemplate
                     .postForEntity(
                             "http://localhost:8080/auth-service/auth/local",
                             entity,
-                            String.class
+                            ServiceRequestLogin.class
                     );
 
             // Kiem tra phan hoi
