@@ -35,7 +35,8 @@ public class SecurityConfig implements WebMvcConfigurer {
                             "/swagger-ui/**",
                             "/swagger/**",
                             "/v3/api-docs/**",
-                            "/auth-service/**"
+                            "/auth-service/**",
+                            "/actuator/**"
                     ).permitAll()
                     .anyRequest().authenticated();
         });
@@ -70,7 +71,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 "Content-Type",
                 "X-Captcha-Token",
                 "X-Client-Id" // khi login local, yeu cau FE gui kem header ClientId de authentication_service xac thuc DB
-               ));
+        ));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 

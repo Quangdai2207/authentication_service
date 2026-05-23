@@ -1,0 +1,19 @@
+Spring microservice mini
+
+Spring microservice mini la du an duoc trien khai theo kien truc Microservices, gom cac services:
+    1. Service authentication_service       -> Xac thuc va phan quyen cho cac ung dung monolithic & microservice
+    2. Service_mvc                          -> Service test thu nghiem MVC dang ky xac thuc voi authentication service
+    3. reaction                             -> Dinh nghia cac doi tuong cho cac service giap tiep qua OpenFeing hoac Restemplate hoac
+                                               message queue nhu Kafka, RabbitMQ
+    4. service_registry                     -> Dich vu quan ly service strong he thong ung dung microservices
+                                               Service Registry su dung Eureka Service de quan ly microservice
+    5. manage_config                        -> Dong vai tro la may chu quan ly cau hinh cho toan bo ung dung microservices
+                                               Su dung Github de quan ly cac cau hinh cua microservice.
+                                               manage_config mac du la mot service quan ly cau hinh chung cua toan bo he thong microservice
+                                               nhung no van duoc xem la mot microservice.
+
+
+    Cac services deu duoc tich hop Spring Actuator de quan ly so lieu he thong va tinh trang suc khoe cua moi he thong
+    Cac services deu duoc su dung Zipkin de quan ly va truy vet du lieu theo Trace va Span trong qua trinh truyen va nhan du lieu. Zipkin
+    la mot may chu hoat dong doc lap va cac services phai tu dang ky de su dung dich vu truy vet du lieu tu Zipkin.
+

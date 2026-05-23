@@ -1,0 +1,151 @@
+manage_config service
+
+manage_service dong vai tro la mot may chu quan ly cac cau hinh cua toan bo services trong toan he thong ung dung
+microservice.
+manage_service mac du la may chu nhung van duoc xem la mot service trong kien truc microservice.
+mange_service su dung dependency "config server" cuac Spring Boot de thuc hien quan ly cau hinh.
+
+CO CHE HOAT DONG CUA SPRING CONFIG SERVER
+    Spring Config Server quan ly cau hinh thong qua cloud nhu git hub, aws...vv, toan bo cau hinh cua toan bo
+    microservice trong he thong deu duoc quan ly thong qua cloud.
+
+    Thong thuong, moi service trong kien truc microservice deu co file cau hinh rieng la application.properties
+    hoac application.yml de thuc hien cau hinh cac bien moi truong hoac cau hinh tich hop cong nghe...vv. Nhung
+    khi dang ky quan ly cau hinh tu Spring Config Server thi toan bo noi dung cau hinh trong cac file cau hinh
+    rieng le cua tung services se duoc khai bao trong noi dung file cua repo cloud. Thay do cac service chi can
+    khi bao mot so thong tin chinh trong file cau hinh application.properties hoac application.yml de khi service
+    khoi dong thi Spring lay cac thong tin do khai bao voi repo cloud de lay cau hinh cho service do.
+
+        Vi du: trong project spring_microservice_mini la mot du an duoc build theo kien truc microservice, va service manage_config
+               la service dong vai tro la may chu quan ly toan bo cau hinh cho cac service khac. Va manage_config hoat dong dua tren
+               framework Config Server cua Spring.
+
+               Tai service manage_config dong vai tro la may chu va muon thuc hien quan ly cau hinh bang cloud, can phai them cac phu thuoc
+               va cau hinh nhu sau:
+               Them phu thuoc cho vai tro la may chu voi dependency
+                   <dependency>
+                       <groupId>org.springframework.boot</groupId>
+                       <artifactId>spring-boot-starter-actuator</artifactId>
+                   </dependency>
+                   <dependency>
+                       <groupId>org.springframework.cloud</groupId>
+                       <artifactId>spring-cloud-config-server</artifactId>
+                   </dependency>
+
+                Trong application.properties cua manage_config them noi dung cau hinh:
+                    spring.application.name=manage-config
+                    server.port=9999
+                    eureka.client.service-url-defaultZone=http://localhost:8761/eureka
+                    eureka.client.register-with-eureka=true
+                    eureka.client.fetch-registry=true
+                    management.tracingsamplingprobability=1.0
+
+                    ## URL lien ket voi Git Cloud quan ly cau hinh
+                    spring.cloud.config.server.git.uri=https://github.com/Quangdai2207/Spring-config
+
+
+               Phia client service service_registry muon Config Server quan ly cau hinh thi phai thuc hien dang ky thong qua service manage_config.
+               De co the dang ky quan ly cau hinh service_registry can phai them dependency Config Client phia may khach
+                   <dependency>
+                       <groupId>org.springframework.cloud</groupId>
+                       <artifactId>spring-cloud-starter-config</artifactId>
+                   </dependency>
+
+               sau khi them phu thuoc, trong application.properties cua service_registry can phai them cac thuoc tinh cau hinh bat buoc truoc khi
+               doc cau hinh tu cloud repo nhu sau:
+                    spring.application.name=service-registry
+                    server.port=8761
+                    spring.profile.active=dev
+
+                    ## Quan ly cau hinh cloud tu manage_config
+                    spring.config.import=configserver:http://localhost:9999
+
+                    Nhu vay, Neu nhu service_registry muon su dung hoan toan cau hinh tu cloud do manage_config quan ly thi toan bo noi
+                    dung trong application.properties chi can khai bao ten service, port va profile va dong thoi service_registry cung khong
+                    can phai tao cac profile application-dev.properties, application-prod.properties hay application-qa.properties, cac noi dung
+                    nay Spring Cconfig Server se tu dong lay trong repo cloud de ap dung.
+
+                    Tru truong hop neu service_registry doi khi muon dung cau hinh tu cloud doi khi muon dung cau hinh local cua service thi
+                    service co the them noi dung cau hinh truc tiep cho application.properties dong thoi co the tao them cac profiles de spring
+                    thu thi tren cau hinh local cua service va trong application.properties tai phan noi dung cau hinh config can phai them tu khoa
+                    "optional" de thuc hien dieu do.
+
+                     # Them "optional" de co the ap dung noi dung cau hinh local cua service
+                     spring.config.import=optional:configserver:http://localhost:9999
+
+               buoc tiep theo, sau khi khai bao cac noi dung chinh cho application.properties nhu ten service, port, profile. Tren cloud repo (Github)
+               can phai thuc hien cac noi dung sau:
+
+                    +   Tao repo cau hinh (Vi du: config-repo)
+                    +   Tao cac file profile cau hinh cho cac service, trong vi du service_registry dang ky su dung cau hinh tu cloud thi can phai
+                        tao profile cau hinh va noi dung cau hinh cho tung profile.
+
+                        Ten cua file cau hinh tren repo cloud tot nhat nen cung voi ten service name "service-registry" va cac profile chi can
+                        service-registry-dev, service-registry-prod...vv, gieu nay giup cho viec quan ly cac file cau hinh hoat dong dung neu nhu
+                        co nhieu service dang ky quan ly cau hinh chung
+
+               (Xem demo tai service_registry va cac file cau hinh cho service_registry tai repo githhub https://github.com/Quangdai2207/Spring-config)
+
+
+               Mot luu y quan trong trong vi du nay la manage_config va service_registry deu la 2 service dong vai tro la may chu. Trong do, voi
+               manage_config la service may chu quan ly cau hinh chung cua toan bo he thong microservice va service_registry la service may chu quan
+               ly toan bo cac services trong microservice, khi ca 2 may chu phu thuoc lan nhau voi mot ben la client va mot ben la server thi khi khoi
+               dong de xay ra tinh trang bao loi khi khong ket noi duoc dich vu cua service dong vai tro la may chu.
+
+                    Giai thich:
+                        Voi quan ly cau hinh thi manage_config dong vai tro la may chu va service_registry dong vai tro la may khach
+                        Voi quan ly service thi service_registry dong vai tro la may chu va manage_config la may khach
+
+                        Nhu vay khii khoi dong 1 trong 2 service thi rat de xay ra bao loi client khong ket noi duoc voi may chu.
+
+                    Cach giai quyet:
+                        Neu service-registry dong vai tro la may chu quan ly toan bo services cua he thong va manage_config dang ky dich vu voi tu cach
+                        la Client cho Cloud Eureka tu Service-registry, thi toan bo noi dung cau hinh chinh cua Eureka vva cac noi dung co lien quan khac
+                        nen duoc dat tai file cau hinh local cua Service-registry, nhung noi dung mang tinh khong rang buoc 2 ben co the up len repo cloud.
+                        Chieu nguoc lai service-registry dang ky quan ly cau hinh tu mange_config cung xu ly tuong tu voi manage_config.
+
+
+                        Vay khi thuc hien dang ky cau hinh, nen kiem tra van de nhu da giai thich de quyet dinh co dang ky cau hinh hay khong. Neu ca 2
+                        khong phu thuoc qua lai thi co the thuc hien dang ky cau hinh, nhung neu co dau hieu phu thuoc qua lai thi nen can nhac viec them
+                        tu khoa "optional" cho service phu thuoc dang ky quan ly cau hinh.
+
+               Mot luu y nua la tai cac file cau hinh cua cac service khi dang ky quan ly cau hinh chung voi vai tro la may khach
+               spring.config.import=configserver:http://localhost:9999 Spring Config Server se tu dong lay toan bo noi dung cau hinh tren cloud de
+               ap dung cho service tuong ung. Tuy nhien, Spring Config Server co the cho phep them thuoc tinh "optional" nhu sau
+               spring.config.import=optional:configserver:http://localhost:9999. Khi khai bao thuoc tinh "optional" dieu nay co nghia khi Service
+               khoi dong lan dau, Spring se lay cau hinh tren cloud hoac trong qua trinh service dang hoat dong ma noi dung cau hinh tren cloud co
+               the loi hoac chet thi Spring tu dong lay noi dung trong file cau hinh local cua service ap dung va ung dung khong bi crash nua chung
+
+               Nhu vay, khi thuc hien dang ky quan ly cau hinh chung, ban than tung service nen co noi dung cau hinh tuong ung voi cau hinh dang
+               ky quan ly de dam bao cac su co xay ra khong mong muon.
+
+
+Demo Luong thuc thi bang so do
+
+                        ---------------------------------
+                        |  Noi dung cau hinh tren cloud |                           [Github, AWS...] chua toan bo noi dung cau hinh cua cac clients
+                        ---------------------------------                                           ser1.yml, ser1-dev.yml, ser1-prod.yml
+                                        ^                                                           ser2.yml, ser2-dev.yml, ser2-prod.yml
+                                        |  Tra ve noi dung cau hinh tuong                           ser3.yml, ser3-dev.yml, ser3-prod.yml
+                                        |  ung khi Spring config request                            ...vv
+                                        |
+                        ----------------------------------
+                        |         Manage_config          |                          [Spring Config server]
+                        ----------------------------------
+                                        ^
+                                        |  Yeu cau Config Server lay cau hinh tu 3 noi
+                                        |  dung khai bao mac dinh trong application.yml
+                                        |  application.properties nhu Port, Name, Profile.
+                                        |  Cac noi dung cau hinh con lai Spring bo qua. Tru
+                                        |  khi co "optional"
+                                        |
+                        -----------------------------------
+                        ^       ^       ^       ^         ^
+                        |       |       |       |         |
+                       Ser1   Ser2     Ser3    Ser4     Ser5                         [clients]
+
+
+
+
+
+
