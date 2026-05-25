@@ -8,16 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import service.mvc.dtos.response.RequestLoginResponse;
 import service.reaction.request.ServiceRequestLogin;
-import tools.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     // Gia su rang service "service_mvc" da dang ky su dung dich vu Authentication Service va co auth-service-id
-    private final static String authServiceId = "authentication service id";
+    private final static String authServiceId = "bbc711da-5aee-43bd-b3a4-1781b76f7bfc";
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
 
     @GetMapping("/login")
     public String login() {
@@ -46,7 +45,7 @@ public class AuthController {
          *  3. Doi tuong nhan phan hoi Response. Thuong thi nen Copy doi tuong phan hoi tu service dang call Api
          * */
         ResponseEntity<RequestLoginResponse> response = restTemplate.postForEntity(
-                "http://authentication-service/auth-service/auth/local",
+                "http://authentication-service/auth-service/auth/mvc/local/login",
                 body, //? Request Body
                 RequestLoginResponse.class //? Response Object type corresponding
         );

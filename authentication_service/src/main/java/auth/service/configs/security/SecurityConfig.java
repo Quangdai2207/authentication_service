@@ -60,8 +60,10 @@ public class SecurityConfig implements WebMvcConfigurer {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173",
-                "http://localhost:9090" // cho phep service "service_mvc" truy cap
+                "http://localhost:3000", // port Grafana Render metrics truc quan bang GUI tu prometheus
+                "http://localhost:9090", // PORT Prometheus lay metrics tu JVM cua authentication service
+                "http://localhost:8989",// cho phep service "service_mvc" truy cap
+                "http://localhost:8080"// Test API cuc bo tren he thong
         ));
 
         // Cho phép các method

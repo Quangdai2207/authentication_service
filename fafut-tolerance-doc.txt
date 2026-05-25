@@ -1,0 +1,198 @@
+FAULT TOLERANCE TRONG MICROSERVICES
+
+Giai thich thuat ngu:
+Fault Tolerance trong microservice la "kha nang chiu loi" trong kin truc phan tan cua toan bo he thong ung dung.
+
+Y nghia:
+KHa nang chiu loi nghia la khi mot mat xich xay ra su co hoac loi ngoai y muon th ung dung van co the hoat dong tiep tuc
+va khong bi gian doan.
+
+Tam quan trong:
+Trong mot he thong ung dung phan tan microservice, moi mot service la mot tien trinh hoat dong doc lap voi domain business
+doc lap, DB doc lap, tich hop cong nghe doc lap...vv nham phuc vu cho muc dich cu the cua service do.
+
+-------------------------------------------------------------------------------------------------------------------------
+|                                                                                                                       |
+|                                            ____________________                                                       |
+|                                            |     FE server    |                                                       |
+|                                            --------------------                                                       |
+|                                                       |                                                               |
+|                                                       |                                                               |
+|                ________________________________________________________________________________________               |
+|                |                                  BE System                                           |               |
+|                ----------------------------------------------------------------------------------------               |
+|                                                       |                                                               |
+|                                                       |  ---------------                                              |
+|                                                       |  | Gateway API |                                              |
+|                                                       |  ---------------                                              |
+|                                                       |                                                               |
+|                ----------      ----------      -----------     -----------      ---------     ----------              |
+|                |  Ser 1 | ---- |  Ser 2 | ---- |  Ser 3  | --- |  Ser 4  | ---  | Ser 5 | --- |  Ser 6 |              |
+|                ----------      ----------      -----------     -----------      ---------     ----------              |
+|                                                                                                                       |
+|                                                                                                                       |
+-------------------------------------------------------------------------------------------------------------------------
+
+Demo tren la mot dien hinh cho ung dung co kien truc phan tan, moi mot service deu co muc dich va business doc lap, neu 1
+trong cac service trong qua trinh hoat dong nhung phat sinh su co khong mong muon thi viec goi du lieu tu FE hoac viec
+giao tiep giua cac service co the bi gian doan hoac gay ra loi hoac co the crash ung dung va day la dieu khong mong muon
+trong mo hinh he thong phan tan.
+
+Trong qua trinh van hanh hoac bao tri he thong, mot so nguyen nhan thuong gay ra loi hoac su co cho thong nhu:
+    1. Network Latency - do tre mang
+       Thuong la loi nguon cua phat sinh trong moi service, loi nay la nguyen nhan gay ra cac loi timeout, retry hoac la
+       loi day chuyen (cascading failure)
+
+    2. Deployment issues
+       Loi do trong qua trinh trien khai do cau hinh sai, version khong tuong thich giua cac phu thuoc qua lai cua moi
+       service hoac trien khai bi loi.
+
+    3. Increased Complexity
+       Khi he thong phan tan ngay mot phinh to thi do phuc tap tuong ung cung tang dan theo thoi gian
+
+Khi trien khai mo hinh he thong phan tan, cac ky thuat lien quan den kha nang chiu loi can phai trien khai cho mot so tinh
+huong co the xay ra, trong do:
+    1. Fault Isolation (Co lap/ cach ly loi)
+       Trong qua trinh hoat dong, khi loi phat sinh thi loi duoc cach ly va co lap sao cho loi khong lay lan va duoc giai
+       quyet trong pham vi duoc cach ly an toan.
+
+    2. Kha nang dan hoi va tu phuc hoi
+       He thong co kha nang dan hoi nghia la he thong co kha nang tang va can bang theo tai. Dieu nay giup cho he thong
+       co kha nang mo rong theo nhu cau thuc te tu nguoi dung.
+
+       Khi phat trien he thong phan tan thi viec xay ra loi trong qua trinh hoat dong la dieu khong the tranh khoi, va he
+       thong can phai duoc chuan bi va co ke hoach de phong ngua cac kha nang co the xay ra trong tuong lai.
+
+
+Mot so ky thuat de thuc hien xu ly cho kha nang chiu loi
+    1. Retries
+       Day la ky thuat duoc thuc hien cho phep gui lai yeu cau trong pham vi so lan nhat dinh khi mot yeu cau duoc gui
+       den mot service cu va co the phat sinh loi tam thoi nhu timeout (thoi gian cho) do ket noi mang hoac do du lieu
+       nguon khong co san hoac do mot so loi tuong ung mang tinh tam thoi khong gay nghiem trong.
+
+       Vi du: Khi FE hoac service giao tiep thuc hien gui mot yeu cau toi service A, neu service A loi thi he thong tu
+              dong thuc hien thu lai yeu cau, viec nay giup cho yeu cau duoc ly va phan hoi thanh cong neu nhu loi tai
+              service A mang tinh tam thoi va khong nghiem trong.
+
+    2. Rate Limiting:
+       Gioi han toc do, nghia la gioi han va kiem soat so luong request ma 1 service co the xu ly trong mot khung thoi
+       gian cu the. Dieu nay giup ngan ngua kha nang gay qua tai va ap luc cho tung service, dam bao viec su dung tai
+       nguyen cua service duoc can bang.
+
+       Moi mot service trong he thong phan tan deu co dung luong nhat dinh (ram, cache, storage...), rate limiting huu ich
+       trong viec dam bao cac request gui den services phu hop dung luong thuc te cua moi service va khong vuot qua muc
+       cho phep.
+
+       Rate limiting co the han che phan nao mot luong lon request co kha nang qua tai hoac cac cuoc tan cong (DDOS, pom
+       request dan den viec tu choi dich vu tu cua cac request khac, day duoc xem la mot cuoc tan cong mang co chu dich
+       nham lam treo he thong may chu).
+
+    3. Bulkheads
+       Vach ngan/ ngan chan, day la mot hinh thuc co lap sao cho khi mot service phat sinh loi nhung loi duoc cach ly mot
+       cach an toan va khong anh huong hoac lay lan den cac service khac dang hoat dong.
+
+    4. Circuit breaker
+       Cau dao (bo ngat mach), co chuc nang bat va tat, on/off. Trong qua trinh ung dung hoat dong, he thong can phai co
+       kha nang giam sat tien trinh tung service rieng va chung va ngan chan cac loi lan truyen.
+
+       Vi du: 2 service A va B, He thong phai giam sat duoc tinh trang cua 2 service nay va phat hien loi neu nhu 1 trong
+              2 service gay ra loi hoac ca 2 phat sinh loi. Neu loi phat sinh tu service B thi loi nay khong nen gay anh
+              huong den service A hoac nau A va B cung loi thi loi phai can duoc duoc tach biet loi thuoc ve moi ben.
+
+       Khi mot request gui den service can duoc xu ly, bo ngat mach dam bao sao cho request duoc xu ly mot cach tron tru.
+       Co che hoat dong cua bo ngat mach nhu sau:
+              Khi mot dich vu xay ra loi hoac gap su co lien tuc hoac do tre cao thi bo ngat mach se duoc kich hoat va cac
+              request tiep theo se duoc chuyen den phuong an du phong da duoc khai bao hoac phan hoi loi, dieu nay giup
+              cho service dang gap su co co the giam tai o muc can thiet nhung van co the cung cap dich vu nhung trai
+              co the bi suy giam dong thoi dam bao ung dung hoat dong on dinh khong gian doan.
+
+    5. Fallbacks
+       Phuong an du phong, la cac hanh dong du phong khi mot service khong co kha nang cung cap dich vu hoac phan hoi.
+       Phuong an du phong co the can phai dinh nghia truoc nhu cac gia tri mac dinh, hoac phan hoi mac dinh tu bo nho
+       cache hoac nguon du lieu phu...vv.
+
+       Phuong an du phong co the la phuuong an rieng cho moi service, dong thoi phuong an du phong tong the cho toan bo,
+       dieu nay giup cho nguoi dung co the nhan duoc phan hoi ngay khi dich vu chinh khong co kha nang phan hoi.
+
+    6. Timeout
+       Thoi gian cho phan hoi tu he thong ve phia may khach, ngoai viec he thong tu xu ly timeout, phia FE cung can xu ly
+       timeout cho ca request de dam bao request duoc xu ly tron tru.
+
+    7. Graceful Degradation
+       Giam hieu suat mot cach nhe nhang, ky thuat nay de cap den van de he thong hoat dong binh thuong nhung cac chuc
+       nang gap su co hoac qua tai. Cac tinh nang khong thiet yeu hoac ton nhieu tai nguyen co the duoc vo hieu hoa hoac
+       don gian hoa de nhuong cho cho cac tinh nang quan trong hon => day la y nghia cua viec giam hieu suat mot cach kheo
+       leo va giup ngan ngua loi dam bao he thong hoat dong manh me va co kha nang chiu loi.
+
+Trong he sinh thai Spring, thu viec Resilience4J la mot thu vien cung cap cac ky thuat cho kha nang chiu loi cua he thong
+day la thu vien nhe va se su dung.
+
+
+RateLimiting va cac ly do can phai su dung RateLimiting
+Nhu da giai thich trong phan kha nang chiu loi va RateLimiting la mot phan trong van de xu ly kha nang chiu loi cua mot
+he thong phan tan giup service co the gioi han toc do, kiem soat so luong request va xu ly so luong request trong mot khung
+thoi gian nhat dinh. Vay, mot so cac ly do can phai dung den ky thuat RateLimiting nhu sau:
+
+    1. Preventing Abuse - ngan chan hanh vi lam dung
+       Mot so truong hop tan cong qua duong truyen mang va gay ra van de tu choi dich vu, cac cuoc tan cong nay duoc xem
+       la dang tan cong DDDOS (Distributed Denial Of Service).
+
+       Vi du:
+               Gia su rang ta co may chu server A, server A co the nhan bat ky request nao tu phia client
+
+               Nguoi dung thong thuong co the gui request yeu cau trich xuat du lieu tu server A mot cach binh thuong.
+
+               Nhung, voi DDOS no la mot tap hop cac thiet bi, trong do gom mot may chu dieu khien va nhieu thiet bi ve tinh.
+               Cac thiet bi ve tinh la cac thiet bi trong to chuc cua toi pham DDOS chu dong su dung phan mem remote tu phia
+               may chu DDOS hoac cung co the la cac may nguoi dung binh thuong tro thanh nan nhan khi vo tinh cai dat chuong
+               trinh remote cua may chu DDOS.
+
+               ------------
+               | Attacker |  May chu DDOS (control)
+               ------------
+
+                              ----------
+                              | Zombie | remote --------->
+                              ----------
+
+                              ----------                           ----------      -----------             ------------
+                              | Zombie | remote --------->         | Router |   -> | Router  |     -->     | Server A |
+                              ----------                           ----------      -----------             ------------
+
+                              ----------
+                              | Zombie | remote --------->
+                              ----------
+
+
+               Khi DDOS nham muc tieu la Server A va tao ra nhieu request tu cac thiet bi ve tinh cua DDOS (Zombie Machine)
+               sao cho so luong request vuot dung luong ma bang thong do co the chiu dung nham gay ra viec tu choi dich vu
+               tu Server A truoc khi cac request cua nguoi dung binh thuong co the den duoc Server A, neu so luong request
+               tro nen bung phat dan den Server A co the system down ngay lap tuc.
+
+               =>> RateLimiting phan nao co the xu ly duoc van de so luong request va giam toc request khi can thiet.
+
+    2. Resource Allocation - Phan bo nguon tai nguyen
+       Viec phan bo nguon tai nguyen giup cho he thong co the can bang viec phan bo nguyen tai nguyen mot cach hop ly den
+       nguoi dung.
+
+    3. Cost Management - Quan ly chi phi
+       Quan ly va co the toi uu hoa chi phi neu he thong dat tren cloud va he thong phai tra chi phi cho cac request tu
+       clients.
+
+    4. Web Scraping
+       Ngan chan hanh vi sao chep du lieu tu he thong
+
+    5. Login Attemp
+       Ngan chan cac hanh vi co gang thu nghiem xac thuc danh tinh nguoi dung tu dong bang cac proxy server nhu burp suite...
+
+De co the su dung combo Resilience4J phuc vu cho khang chiu loi cua he thong, can phai cau hinh bang cach them cac goi
+phu thuoc va khai bao cau hinh cho application.yml hoac application.properties.
+
+de co the thuc nghiem mo phong cho tinh nang giam toc va quan ly so luong request RateLimiting, can su dung cong cu ho
+tro JMeter. JMeter la cong cu gia lap tao ra nhieu request tan cong vao he thong de kich hoat chuc nang RateLimiting. De
+su dung JMeter can phai tai Apache JMeter hoac co the dung docker de thu nghiem JMeter
+
+
+
+
+

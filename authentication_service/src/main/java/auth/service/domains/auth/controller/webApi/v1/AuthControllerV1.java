@@ -1,4 +1,4 @@
-package auth.service.domains.auth.controller.v1;
+package auth.service.domains.auth.controller.webApi.v1;
 
 import auth.service.domains.auth.dtos.request.local.LoginRequest;
 import auth.service.domains.auth.dtos.request.local.RegisterRequest;
@@ -32,6 +32,7 @@ public class AuthControllerV1 {
             @RequestHeader("X-Client-Id") String clientId,
             HttpServletRequest request
     ) {
+        System.out.println("WebApi Controller");
         return authService.login(body, clientId, request);
     }
 

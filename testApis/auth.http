@@ -11,9 +11,9 @@ X-Client-Id: xxx
 ###
 POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
-X-Client-Id: xxx
+X-Client-Id: bbc711da-5aee-43bd-b3a4-1781b76f7bfc
 
 {
-"email" : "email@example.com",
-"password": "secretpassword"
+"email" : "daitran.inbox@gmail.com",
+"password": "Admin@123"
 }
